@@ -1,0 +1,58 @@
+:root {
+    --primary_color: green;
+}
+
+body {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    margin: 0;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+/* GAME */
+
+.game {
+    border: 1px solid black;
+    height: 400px;
+    width: 300px;
+}
+
+/* INFO */
+
+.info {
+    height: 10%;
+}
+
+.score_info {
+    align-items: center;
+    border: 1px solid black;
+    display: flex;
+    height: 100%;
+    padding: 0 6px;
+}
+
+#score {
+    text-align: right;
+    width: 22%;
+}
+
+/* BOARDGAME */
+
+.render_boardgame {
+    align-items: center;
+    *border: 1px solid black;
+    display: flex;
+    height: 90%;
+    justify-content: center;
+}
+
+#boardgame {
+    border: 1px solid black;
+    height: 360px;
+    width: 300px;
+}
