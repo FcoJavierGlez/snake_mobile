@@ -27,7 +27,8 @@ body {
     padding: 10px;
     position: absolute;
     text-align: justify;
-    width: 80%;
+    font-weight: bold;
+    width: 250px;
     z-index: 2;
 }
 
