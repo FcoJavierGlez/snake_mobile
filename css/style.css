@@ -31,7 +31,7 @@ body {
 
 .score_info {
     align-items: center;
-    border: 1px solid black;
+    *border: 1px solid black;
     display: flex;
     height: 100%;
     padding: 0 6px;
@@ -58,3 +58,6 @@ body {
     height: 360px;
     width: 300px;
 }
+
+/* SNAKE */
+
