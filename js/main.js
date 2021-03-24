@@ -42,6 +42,7 @@
         /* const containerMessage     = document.getElementById("message");
         const message              = containerMessage.children[0];
         const resetButton          = document.getElementById("reset"); */
+        const startButton          = document.getElementById("start");
         const elementsBoardGame    = document.getElementById("boardgame");
         const score                = document.getElementById("score");
         /* const time                 = document.getElementById("time"); */
@@ -112,6 +113,13 @@
             snake.togglePause();
             crono.togglePause();
             !snake.getPaused() ? (idRenderUI = renderUI()) : stopRenderUI();
+        });
+
+        startButton.addEventListener("click", function() {
+            snake.togglePause();
+            crono.togglePause();
+            !snake.getPaused() ? (idRenderUI = renderUI()) : stopRenderUI();
+            this.parentElement.style.display = "none";
         });
 
         /* resetButton.addEventListener("click", resetGame); */
