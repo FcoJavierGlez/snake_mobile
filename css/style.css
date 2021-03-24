@@ -25,6 +25,7 @@ body {
 /* INFO */
 
 .info {
+    background-color: rgb(200, 200, 200);
     height: 10%;
 }
 
@@ -52,7 +53,8 @@ body {
 }
 
 #boardgame {
-    border: 1px solid black;
+    *background-color: gray;
+    *border: 1px solid black;
     height: 360px;
     width: 300px;
 }
