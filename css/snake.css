@@ -5,6 +5,7 @@
     --width_square_min_1100: 45px;
     --width_square_min_1300: 50px;
     --color_snake: rgb(136, 209, 26);
+    --color_clavit: #3CF3BE;
 }
 /* @font-face {
     font-family: 'Digital-clock';
@@ -24,25 +25,30 @@
     width: var(--width_square_min_500);
 }
 .empty {
-    background-color: gainsboro;
+    *background-color: gainsboro;
 }
 .snake {
-    background-color: var(--color_snake);
-    color: rgb(255, 227, 68);
+    background-color: var(--color_clavit);
+    border-radius: 20px;
+    *color: rgb(255, 227, 68);
 }
 .head {
-    background-position: center;
+    /* background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
-    background-image: url(../img/head.png);
+    background-image: url(../img/head.png); */
+    background-color: var(--color_clavit);
+    border-radius: 20px;
 }
 .tail {
-    background-position: center;
+    /* background-position: center;
     background-size: contain;
     background-repeat: no-repeat;
-    background-image: url(../img/tail.png);
+    background-image: url(../img/tail.png); */
+    background-color: var(--color_clavit);
+    border-radius: 20px;
 }
-.right {
+/* .right {
     transform: rotate(90deg);
 }
 .down {
@@ -50,24 +56,38 @@
 }
 .left {
     transform: rotate(-90deg);
-}
+} */
 
 .food {
-    background-image: url(../img/mouse.svg);
+    /* background-image: url(../img/mouse.svg);
     background-position: center;
     background-size: contain;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    background-color: var(--color_clavit);
+    border-radius: 20px;
+    animation: blinker 3s infinite;
 }
 
 .special-food {
-    background-image: url(../img/bird.svg);
+    /* background-image: url(../img/bird.svg);
     background-position: center;
     background-size: contain;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; */
+    background-color: var(--color_clavit);
+    border-radius: 20px;
+    animation: blinker 1.5s infinite;
 }
 
 .hidden {
     display: none;
+}
+
+@keyframes blinker {
+    0% {filter: opacity(1);}
+    25% {filter: opacity(0);}
+    50% {filter: opacity(1);}
+    75% {filter: opacity(0);}
+    100% {filter: opacity(1);}
 }
 
 /* #message {

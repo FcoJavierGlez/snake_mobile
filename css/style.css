@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+
 :root {
-    --primary_color: green;
+    --color_clavit: #3CF3BE;
+}
+
+* {
+    font-family: 'Nunito';
 }
 
 body {
@@ -49,7 +55,9 @@ body {
 /* GAME */
 
 .game {
-    border: 1px solid black;
+    border: 5px solid var(--color_clavit);
+    border-radius: 20px;
+    padding: 5px;
     height: 400px;
     width: 300px;
 }
@@ -57,13 +65,13 @@ body {
 /* INFO */
 
 .info {
-    background-color: rgb(200, 200, 200);
+    border-bottom: 2px solid black;
+    margin-bottom: 2px;
     height: 10%;
 }
 
 .score_info {
     align-items: center;
-    *border: 1px solid black;
     display: flex;
     height: 100%;
     padding: 0 6px;
@@ -78,18 +86,12 @@ body {
 
 .render_boardgame {
     align-items: center;
-    *border: 1px solid black;
     display: flex;
     height: 90%;
     justify-content: center;
 }
 
 #boardgame {
-    *background-color: gray;
-    *border: 1px solid black;
     height: 360px;
     width: 300px;
 }
-
-/* SNAKE */
-
