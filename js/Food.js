@@ -10,13 +10,13 @@
  * consumida antes de acabar su tiempo, acabará desapareciendo.
  */
 class Food {
-    static #CLASS_NORMAL_FOOD  = 'square food';
-    static #CLASS_SPECIAL_FOOD = 'square special-food';
-    #points   = 0;
-    #time     = 0;
-    #idRender = 0;
-    #element  = null;
-    #nameThis = '';
+    static _CLASS_NORMAL_FOOD  = 'square food';
+    static _CLASS_SPECIAL_FOOD = 'square special-food';
+    _points   = 0;
+    _time     = 0;
+    _idRender = 0;
+    _element  = null;
+    _nameThis = '';
 
     /**
      * Crea un objeto de la clase Food.
@@ -28,11 +28,11 @@ class Food {
      *                          Por defecto vale -1, es decir, nunca desaparece por agotar tiempo.
      */
     constructor(element,score,nameObj,time = -1) {
-        this.#element  = element;
-        this.#points   = score;
-        this.#nameThis = nameObj;
-        this.#time     = time;
-        this.#idRender = this.#render();
+        this._element  = element;
+        this._points   = score;
+        this._nameThis = nameObj;
+        this._time     = time;
+        //this._idRender = this._render();
     }
 
     /**
@@ -41,19 +41,19 @@ class Food {
      * @return {String} Nombre del atributo en el elemento donde se almacena el objeto food
      */
     getName = function() {
-        return this.#nameThis;
+        return this._nameThis;
     }
 
     /**
      * El alimento es comido (o eliminado por agotarse su tiempo de existencia)
      */
     eated = function() {
-        const points = this.#points;
-        let obj = Object.values(this.#element).find( e => e instanceof Food );
+        const points = this._points;
+        let obj = Object.values(this._element).find( e => e instanceof Food );
         if (obj == undefined ) return;
-        clearInterval(this.#idRender);
-        this.#element.classList = 'square empty';
-        this.#element[obj.getName()] = null;
+        clearInterval(this._idRender);
+        this._element.classList = 'square empty';
+        this._element[obj.getName()] = null;
         return points;
     }
 
@@ -61,27 +61,27 @@ class Food {
      * Pausa o reanuda el juego.
      */
     togglePause = function() {
-        this.#idRender > 0 ? (this.#pauseRender()) : (this.#idRender = this.#render());
+        this._idRender > 0 ? (this._pauseRender()) : (this._idRender = this._render());
     }
 
     /**
      * El alimento se renderiza
      */
-    #render = function() {
+    _render = function() {
         let food = this;
         return setInterval(
             () => {
-                food.#element.classList = food.#time < 0 ? Food.#CLASS_NORMAL_FOOD : Food.#CLASS_SPECIAL_FOOD;
-                food.#time = (food.#time -= food.#time > 0 ? 0.1 : 0).toFixed(1);
-                if (food.#time == 0) food.eated();
+                food._element.classList = food._time < 0 ? Food._CLASS_NORMAL_FOOD : Food._CLASS_SPECIAL_FOOD;
+                food._time = (food._time -= food._time > 0 ? 0.1 : 0).toFixed(1);
+                if (food._time == 0) food.eated();
             }, 100);
     }
 
     /**
      * Pausa el renderizado del alimento
      */
-    #pauseRender = function() {
-        clearInterval(this.#idRender);
-        this.#idRender = 0;
+    _pauseRender = function() {
+        clearInterval(this._idRender);
+        this._idRender = 0;
     }
 }

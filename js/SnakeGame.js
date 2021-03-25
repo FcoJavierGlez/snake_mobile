@@ -8,13 +8,13 @@
  */
 
 const SnakeGame = class {
-    static #POINTS_FOOD         = 5;    //Constant
-    static #POINTS_SPECIAL_FOOD = 15;   //Constant
-    static #MAX_SCORE           = 0;
-    #score     = 0;
-    #idPlay    = 0;
-    #boardGame = [];
-    #snake     = null;
+    static _POINTS_FOOD         = 5;    //Constant
+    static _POINTS_SPECIAL_FOOD = 15;   //Constant
+    static _MAX_SCORE           = 0;
+    _score     = 0;
+    _idPlay    = 0;
+    _boardGame = [];
+    _snake     = null;
 
     /**
      * Constructor de la clase SnakeGame
@@ -23,12 +23,13 @@ const SnakeGame = class {
      * @param {Number} maxScore La puntuación máxima acumulada en una cookie en el navegador.
      */
     constructor(boardGame,maxScore) {
-        SnakeGame.#MAX_SCORE = maxScore == undefined ? SnakeGame.#MAX_SCORE : maxScore;
-        this.#snake     = new Snake(boardGame.length);
-        this.#boardGame = boardGame;
-        this.#resetBoardGame();
-        this.#renderSnake();
-        this.#createFood();
+        SnakeGame._MAX_SCORE = maxScore == undefined ? SnakeGame._MAX_SCORE : maxScore;
+        this._snake     = new Snake(boardGame.length);
+        this._boardGame = boardGame;
+        this._resetBoardGame();
+        this._renderSnake();
+        this._createFood();
+        this.togglePause();
     }
 
     /**
@@ -38,7 +39,7 @@ const SnakeGame = class {
      * @return {String}        Puntuación máxima acumulada.
      */
     static getMaxScore = function (format = false) {
-        return format ? SnakeGame.#formatScore(SnakeGame.#MAX_SCORE) : SnakeGame.#MAX_SCORE;
+        return format ? SnakeGame._formatScore(SnakeGame._MAX_SCORE) : SnakeGame._MAX_SCORE;
     }
 
     /**
@@ -48,7 +49,7 @@ const SnakeGame = class {
      * @return {String}        Puntuación actual.
      */
     getScore = function (format = false) {
-        return format ? this.#formatScore(this.#score) : this.#score;
+        return format ? this._formatScore(this._score) : this._score;
     }
 
     /**
@@ -57,7 +58,7 @@ const SnakeGame = class {
      * @return {Boolean} Si el juego está pausado. True or false.
      */
     getPaused = function () {
-        return this.#idPlay == 0;
+        return this._idPlay == 0;
     }
 
     /**
@@ -66,7 +67,7 @@ const SnakeGame = class {
      * @return {String} Estado del juego: Ganado = 'WIN' | Perdido = 'LOSE' | Sin finalizar = ''
      */
     getStatusGame = function () {
-        return this.#snake.getBody().length == this.#boardGame.length * this.#boardGame[0].length ? 'WIN' : !this.#snake.getAlive() ? 'LOSE' : '';
+        return this._snake.getBody().length == this._boardGame.length * this._boardGame[0].length ? 'WIN' : !this._snake.getAlive() ? 'LOSE' : '';
     }
 
     /**
@@ -78,9 +79,9 @@ const SnakeGame = class {
      */
     setDirection = function (direction) {
         direction = direction.toLowerCase();
-        if (this.#idPlay == 0) return;
+        if (this._idPlay == 0) return;
         if ( !(direction == 'up' || direction == 'down' || direction == 'left' || direction == 'right') ) return;
-        this.#snake.setDirection(direction);
+        this._snake.setDirection(direction);
     }
 
     /**
@@ -88,54 +89,55 @@ const SnakeGame = class {
      */
     togglePause = function () {
         if (this.getStatusGame() !== '') return;
-        this.#idPlay == 0 ? (this.#idPlay = this.#play()) : this.#pause();
-        this.#togglePauseFoodTimer();
+        this._idPlay == 0 ? (this._idPlay = this._play()) : this._pause();
+        this._togglePauseFoodTimer();
     }
 
     /**
      * Reinicia el juego una vez terminado.
      */
     resetGame = function() { //Pending
-        this.#score    = 0;
-        this.#idPlay   = 0;
-        this.#snake    = new Snake(this.#boardGame.length);
-        this.#resetBoardGame();
-        this.#renderSnake();
-        this.#createFood();
+        this._score    = 0;
+        this._idPlay   = 0;
+        this._snake    = new Snake(this._boardGame.length);
+        this._resetBoardGame();
+        this._renderSnake();
+        this._createFood();
+        this.togglePause();
     }
 
     /**
      * Pone en marcha el juego.
      */
-    #play = function () { 
+    _play = function () { 
         let game = this;
         return setInterval( function () {
-            const [nextRow,nextCol] = game.#snake.getNextSquare([game.#boardGame[0].length,game.#boardGame.length]);
-            if (game.#boardGame[nextRow][nextCol].food == null) {
-                game.#snake.move([nextRow,nextCol]);
-                game.#renderBoardGame();
+            const [nextRow,nextCol] = game._snake.getNextSquare([game._boardGame[0].length,game._boardGame.length]);
+            if (game._boardGame[nextRow][nextCol].food == null) {
+                game._snake.move([nextRow,nextCol]);
+                game._renderBoardGame();
             }
             else {
-                const points = game.#feedSnake([nextRow,nextCol]);
-                game.#renderBoardGame();
-                if (!(points == SnakeGame.#POINTS_SPECIAL_FOOD)) //if snake hasn't just eaten a special food
-                    game.#createFood();
-                if (game.#checkCreateSpecialFood()) 
-                    game.#createFood(true);
-                game.#pause();
-                game.#idPlay = game.#play();
+                const points = game._feedSnake([nextRow,nextCol]);
+                game._renderBoardGame();
+                if (!(points == SnakeGame._POINTS_SPECIAL_FOOD)) //if snake hasn't just eaten a special food
+                    game._createFood();
+                if (game._checkCreateSpecialFood()) 
+                    game._createFood(true);
+                game._pause();
+                game._idPlay = game._play();
             }
             if (game.getStatusGame() != '')
-                game.#finishGame();
-        }, 600 - game.#snake.getBody().length * 5);
+                game._finishGame();
+        }, 600 - game._snake.getBody().length * 5);
     }
 
     /**
      * Pausa el juego.
      */
-    #pause = function() {
-        clearInterval(this.#idPlay);
-        this.#idPlay = 0;
+    _pause = function() {
+        clearInterval(this._idPlay);
+        this._idPlay = 0;
     }
 
     /**
@@ -145,11 +147,11 @@ const SnakeGame = class {
      * 
      * @return {Number}           La puntuación correspondiente al valor del alimento.
      */
-    #feedSnake = function([nextRow,nextCol]) {
+    _feedSnake = function([nextRow,nextCol]) {
         let points = 0;
-        this.#score += (points = this.#boardGame[nextRow][nextCol].food.eated()) == undefined ? SnakeGame.#POINTS_SPECIAL_FOOD : points;
-        this.#snake.eat([nextRow,nextCol]);
-        return points == undefined ? SnakeGame.#POINTS_SPECIAL_FOOD : points;
+        this._score += (points = this._boardGame[nextRow][nextCol].food.eated()) == undefined ? SnakeGame._POINTS_SPECIAL_FOOD : points;
+        this._snake.eat([nextRow,nextCol]);
+        return points == undefined ? SnakeGame._POINTS_SPECIAL_FOOD : points;
     }
 
     /**
@@ -157,8 +159,8 @@ const SnakeGame = class {
      * 
      * @return {Boolean} Resultado de la comprobación. True or false.
      */
-    #checkCreateSpecialFood = function() {
-        return this.#snake.getBody().length % 8 == 0 && this.#snake.getBody().length <= this.#boardGame.length * this.#boardGame[0].length - 2
+    _checkCreateSpecialFood = function() {
+        return this._snake.getBody().length % 8 == 0 && this._snake.getBody().length <= this._boardGame.length * this._boardGame[0].length - 2
     }
 
     /**
@@ -170,33 +172,35 @@ const SnakeGame = class {
      * 
      * @param {Boolean} special Opcional: Booleano para crear un alimento especial. True = especial, false = normal.
      */
-    #createFood = function(special = false) {
+    _createFood = function(special = false) {
         let [row,col] = [undefined,undefined];
         do {
-            row = parseInt(Math.random() * this.#boardGame.length);
-            col = parseInt(Math.random() * this.#boardGame[0].length);
-        } while (this.#boardGame[row][col].className !== 'square empty');
-        this.#boardGame[row][col].food = special ? 
-            new Food(this.#boardGame[row][col],SnakeGame.#POINTS_SPECIAL_FOOD,'food',3 + parseFloat( (Math.random() * 3).toFixed(1) )) : 
-            new Food(this.#boardGame[row][col],SnakeGame.#POINTS_FOOD,'food');
+            row = parseInt(Math.random() * this._boardGame.length);
+            col = parseInt(Math.random() * this._boardGame[0].length);
+        } while (this._boardGame[row][col].className !== 'square empty');
+        this._boardGame[row][col].food = special ? 
+            new Food(this._boardGame[row][col],SnakeGame._POINTS_SPECIAL_FOOD,'food',3 + parseFloat( (Math.random() * 3).toFixed(1) )) : 
+            new Food(this._boardGame[row][col],SnakeGame._POINTS_FOOD,'food');
+        if (this._score > 0)
+            this._boardGame[row][col].food.togglePause();
     }
 
     /**
-     * Pausa los temporaizadores de los alimentos que haya en el tablero.
+     * Pausa los temporizadores de los alimentos que haya en el tablero.
      */
-    #togglePauseFoodTimer = function() {
-        for (let i = 0; i < this.#boardGame.length; i++) 
-            for (let j = 0; j < this.#boardGame[0].length; j++) 
-                this.#boardGame[i][j].food?.togglePause();
+    _togglePauseFoodTimer = function() {
+        for (let i = 0; i < this._boardGame.length; i++) 
+            for (let j = 0; j < this._boardGame[0].length; j++) 
+                this._boardGame[i][j].food?.togglePause();
     }
 
     /**
      * Finaliza el juego.
      */
-    #finishGame = function () {
-        SnakeGame.#MAX_SCORE = this.#score > SnakeGame.#MAX_SCORE ? this.#score : SnakeGame.#MAX_SCORE;
-        this.#pause();
-        this.#togglePauseFoodTimer();
+    _finishGame = function () {
+        SnakeGame._MAX_SCORE = this._score > SnakeGame._MAX_SCORE ? this._score : SnakeGame._MAX_SCORE;
+        this._pause();
+        this._togglePauseFoodTimer();
     }
 
     /**
@@ -206,36 +210,36 @@ const SnakeGame = class {
      * 
      * @return {String}      Puntuación formateada input: '5' -> output: '005'
      */
-    #formatScore = score => score < 10 ? `00${score}` : score < 100 ? `0${score}` : score
+    _formatScore = score => score < 10 ? `00${score}` : score < 100 ? `0${score}` : score
 
     /**
      * Renderiza el tablero de juego.
      */
-    #renderBoardGame = function() {
-        for (let i = 0; i < this.#boardGame.length; i++) 
-            for (let j = 0; j < this.#boardGame[0].length; j++) {
-                if (this.#boardGame[i][j].food != null) continue;
-                this.#boardGame[i][j].classList = `square empty`;
+    _renderBoardGame = function() {
+        for (let i = 0; i < this._boardGame.length; i++) 
+            for (let j = 0; j < this._boardGame[0].length; j++) {
+                if (this._boardGame[i][j].food != null) continue;
+                this._boardGame[i][j].classList = `square empty`;
             }
-        this.#renderSnake();
+        this._renderSnake();
     }
 
     /**
      * Renderiza la serpiente dentro del tablero
      */
-    #renderSnake = function () {
-        this.#snake.getBody().forEach( (e,i) => this.#boardGame[e[0]][e[1]].classList = i == 0 ? `square head ${this.#snake.getHeadDirection()}` : 
-            i == this.#snake.getBody().length - 1 ? `square tail ${this.#snake.getTailDirection()}` : `square snake`);
+    _renderSnake = function () {
+        this._snake.getBody().forEach( (e,i) => this._boardGame[e[0]][e[1]].classList = i == 0 ? `square head ${this._snake.getHeadDirection()}` : 
+            i == this._snake.getBody().length - 1 ? `square tail ${this._snake.getTailDirection()}` : `square snake`);
     }
 
     /**
      * Resetea el tablero de juego.
      */
-    #resetBoardGame = function () {
-        for (let i = 0; i < this.#boardGame.length; i++) 
-            for (let j = 0; j < this.#boardGame[0].length; j++) {
-                this.#boardGame[i][j].food?.eated();
-                this.#boardGame[i][j].classList = `square empty`;
+    _resetBoardGame = function () {
+        for (let i = 0; i < this._boardGame.length; i++) 
+            for (let j = 0; j < this._boardGame[0].length; j++) {
+                this._boardGame[i][j].food?.eated();
+                this._boardGame[i][j].classList = `square empty`;
             }
     }
 }
